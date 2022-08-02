@@ -75,23 +75,27 @@ impl ListNode {
         ListNode { next: None, val }
     }
 
-    fn from_vec(arr: Vec<i32>) -> Option<Box<ListNode>> {
-        let mut result = Box::new(ListNode::new(0));
+    fn from_vec(vec: Vec<i32>) -> ListNode {
+        let mut result = ListNode::new(0);
         let mut tail_ref = &mut result;
-        for i in arr {
+        for i in vec {
             let n = Box::new(ListNode::new(i));
             tail_ref.next = Some(n);
             tail_ref = tail_ref.next.as_mut().unwrap();
         }
-        result.next
+        result
+    }
+    fn from(vec: Vec<i32>) -> ListNode {
+        ListNode::from_vec(vec)
     }
 }
+
 pub fn main() {
     assert_eq!(
         Solution::add_two_numbers(
-            ListNode::from_vec(vec![2, 4, 3]),
-            ListNode::from_vec(vec![5, 6, 4]),
+            Box::new(ListNode::from(vec![2, 4, 3])).next,
+            Box::new(ListNode::from(vec![5, 6, 4])).next,
         ),
-        ListNode::from_vec(vec![7, 0, 8])
+        Box::new(ListNode::from(vec![7, 0, 8])).next
     )
 }
