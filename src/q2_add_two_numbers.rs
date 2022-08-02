@@ -70,35 +70,28 @@ pub struct ListNode {
 }
 
 impl ListNode {
-    #[inline]
+    // #[inline]
     fn new(val: i32) -> Self {
         ListNode { next: None, val }
+    }
+
+    fn from_vec(arr: Vec<i32>) -> Option<Box<ListNode>> {
+        let mut result = Box::new(ListNode::new(0));
+        let mut tail_ref = &mut result;
+        for i in arr {
+            let n = Box::new(ListNode::new(i));
+            tail_ref.next = Some(n);
+            tail_ref = tail_ref.next.as_mut().unwrap();
+        }
+        result.next
     }
 }
 pub fn main() {
     assert_eq!(
         Solution::add_two_numbers(
-            Some(Box::new(ListNode {
-                val: 2,
-                next: Some(Box::new(ListNode {
-                    val: 4,
-                    next: Some(Box::new(ListNode { val: 3, next: None })),
-                })),
-            })),
-            Some(Box::new(ListNode {
-                val: 5,
-                next: Some(Box::new(ListNode {
-                    val: 6,
-                    next: Some(Box::new(ListNode { val: 4, next: None })),
-                })),
-            })),
+            ListNode::from_vec(vec![2, 4, 3]),
+            ListNode::from_vec(vec![5, 6, 4]),
         ),
-        Some(Box::new(ListNode {
-            val: 7,
-            next: Some(Box::new(ListNode {
-                val: 0,
-                next: Some(Box::new(ListNode { val: 8, next: None })),
-            })),
-        }))
+        ListNode::from_vec(vec![7, 0, 8])
     )
 }
