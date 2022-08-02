@@ -53,7 +53,6 @@ impl Solution {
 }
 // @lc code=end
 
-struct Solution;
 #[derive(PartialEq, Eq, Clone, Debug)]
 pub struct ListNode {
     pub val: i32,
@@ -81,6 +80,7 @@ impl ListNode {
     }
 }
 
+struct Solution;
 pub fn main() {
     assert_eq!(
         Solution::add_two_numbers(
