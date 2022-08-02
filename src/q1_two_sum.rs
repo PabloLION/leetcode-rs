@@ -4,8 +4,6 @@
  * [1] Two Sum
  */
 
-use crate::Solution;
-
 // @lc code=start
 impl Solution {
     #[allow(dead_code)]
@@ -46,6 +44,7 @@ impl Solution {
 }
 // @lc code=end
 
+struct Solution;
 pub fn main() {
     assert_eq!(Solution::two_sum(vec![2, 7, 11, 15], 9), vec![0, 1]);
 }

@@ -4,26 +4,8 @@
  * [2] Add Two Numbers
  */
 
-use crate::ListNode;
-use crate::Solution;
-
 // @lc code=start
 // Definition for singly-linked list.
-// #[derive(PartialEq, Eq, Clone, Debug)]
-// pub struct ListNode {
-//   pub val: i32,
-//   pub next: Option<Box<ListNode>>
-// }
-//
-// impl ListNode {
-//   #[inline]
-//   fn new(val: i32) -> Self {
-//     ListNode {
-//       next: None,
-//       val
-//     }
-//   }
-// }
 
 impl Solution {
     pub fn add_two_numbers(
@@ -79,3 +61,44 @@ impl Solution {
     }
 }
 // @lc code=end
+
+struct Solution;
+#[derive(PartialEq, Eq, Clone, Debug)]
+pub struct ListNode {
+    pub val: i32,
+    pub next: Option<Box<ListNode>>,
+}
+
+impl ListNode {
+    #[inline]
+    fn new(val: i32) -> Self {
+        ListNode { next: None, val }
+    }
+}
+pub fn main() {
+    assert_eq!(
+        Solution::add_two_numbers(
+            Some(Box::new(ListNode {
+                val: 2,
+                next: Some(Box::new(ListNode {
+                    val: 4,
+                    next: Some(Box::new(ListNode { val: 3, next: None })),
+                })),
+            })),
+            Some(Box::new(ListNode {
+                val: 5,
+                next: Some(Box::new(ListNode {
+                    val: 6,
+                    next: Some(Box::new(ListNode { val: 4, next: None })),
+                })),
+            })),
+        ),
+        Some(Box::new(ListNode {
+            val: 7,
+            next: Some(Box::new(ListNode {
+                val: 0,
+                next: Some(Box::new(ListNode { val: 8, next: None })),
+            })),
+        }))
+    )
+}
