@@ -33,24 +33,15 @@ impl Solution {
             l2 = ll2.next;
         }
 
-        while l1.is_some() {
-            let ll1 = l1.unwrap();
-            let sum = ll1.val + carry;
+        let mut l = if l1.is_some() { l1 } else { l2 };
+        while l.is_some() {
+            let ll = l.unwrap();
+            let sum = ll.val + carry;
             carry = sum / 10;
             let n = Box::new(ListNode::new(sum % 10));
             tail_ref.next = Some(n);
             tail_ref = tail_ref.next.as_mut().unwrap();
-            l1 = ll1.next;
-        }
-
-        while l2.is_some() {
-            let ll2 = l2.unwrap();
-            let sum = ll2.val + carry;
-            carry = sum / 10;
-            let n = Box::new(ListNode::new(sum % 10));
-            tail_ref.next = Some(n);
-            tail_ref = tail_ref.next.as_mut().unwrap();
-            l2 = ll2.next;
+            l = ll.next;
         }
 
         if carry != 0 {
