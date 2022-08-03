@@ -14,6 +14,9 @@ impl Solution {
         // I think we can at least achieve O(n) time and O(n) space.
 
         // @2022-08-03 03:49:43
+        // The time complexity before was wrong.
+        // sort use some method to merge "chunks" (some youtube video said that)
+
         let mut nums = nums1.clone();
         nums.extend(nums2);
         nums.sort();
