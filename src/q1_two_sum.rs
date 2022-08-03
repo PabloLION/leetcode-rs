@@ -7,7 +7,7 @@
 // @lc code=start
 impl Solution {
     #[allow(dead_code)]
-    fn two_sum_gc(nums: Vec<i32>, target: i32) -> Vec<i32> {
+    fn two_sum_copilot(nums: Vec<i32>, target: i32) -> Vec<i32> {
         use std::collections::HashMap;
         let mut map = HashMap::new();
         for (i, num) in nums.iter().enumerate() {
@@ -39,7 +39,7 @@ impl Solution {
     }
 
     fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
-        Solution::two_sum_gc(nums, target)
+        Solution::two_sum_copilot(nums, target)
     }
 }
 // @lc code=end
