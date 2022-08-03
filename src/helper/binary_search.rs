@@ -1,13 +1,21 @@
 //! A binary search implementation.
 //! returns the last index of the element which meet the condition.
 pub fn binary_search(vec: Vec<i32>, condition: &(dyn Fn(i32) -> bool + 'static)) -> Option<usize> {
-    // this is a fake implementation
-    for i in 0..vec.len() {
-        if condition(vec[i]) {
-            return Some(i);
+    let mut left = 0;
+    let mut right = vec.len() - 1;
+    while left <= right {
+        let mid = (left + right) / 2;
+        if condition(vec[mid]) {
+            right = mid - 1;
+        } else {
+            left = mid + 1;
         }
     }
-    return None;
+    if left == vec.len() {
+        None
+    } else {
+        Some(left)
+    }
 }
 
 #[test]
