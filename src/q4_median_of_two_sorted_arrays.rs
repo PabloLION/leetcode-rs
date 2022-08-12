@@ -118,10 +118,15 @@ impl Solution {
         if nums1.len() + nums2.len() == 1 {
             return *nums1.get(0).unwrap_or(nums2.get(0).unwrap_or(&0)) as f64;
         }
-        if nums1.len() < nums2.len() {
+        if nums1.len() > nums2.len() {
             return Solution::find_median_sorted_arrays_binary_search_pablo(nums2, nums1);
         }
-
+        if nums1.len() == 0 {
+            return Solution::find_median_sorted_arrays_binary_search_pablo(
+                nums2[0..=0].to_vec(),
+                nums2[1..].to_vec(),
+            );
+        }
         // extend num1 and nums2
         #[derive(Debug)]
         struct ExtendedVec<T> {
@@ -157,32 +162,31 @@ impl Solution {
         println!("nums1: {:?}, nums2: {:?}", nums1, nums2);
         let l = nums1.len() + nums2.len();
         let h = if l % 2 == 0 { (l - 2) / 2 } else { (l - 1) / 2 };
-        // sum of two index == h-1
+        // sum of two indices to remove == h
         println!("l={}, h={}", l, h);
 
         let binary_search = || {
             let mut left = 0;
             let mut right = nums1.len() - 1;
-            while left < right {
-                let mid = (left + right) / 2;
-                println!("left: {}, right: {}, mid: {}", left, right, mid);
-                if nums1[mid] <= nums2[h - mid - 2] && nums1[mid + 1] >= nums2[h - mid - 1] {
-                    return Some(mid);
-                } else if nums1[mid] > nums2[h - mid] {
-                    left = mid + 1;
+            while left <= right {
+                let x = (left + right) / 2;
+                let y = h - x;
+                println!("left: {}, right: {}, x: {}, y:{}", left, right, x, y);
+                if nums1[x] > nums2[y + 1] {
+                    println!("nums1[x] > nums2[y + 1]");
+                    right = x - 1;
+                } else if nums1[x + 1] < nums2[y] {
+                    println!("nums1[x + 1] < nums2[y]");
+                    left = x + 1;
                 } else {
-                    right = mid;
+                    return Some(x);
                 }
             }
-            if left == nums1.len() - 1 {
-                None
-            } else {
-                Some(left)
-            }
+            panic!("should never reach here");
         };
 
         // let Some(pos) = binary_search();
-        let remained_start1 = binary_search().unwrap() + 2;
+        let remained_start1 = binary_search().unwrap();
         let remained_start2 = h - remained_start1;
         println!(
             "remained_start1: {}, remained_start2: {}",
@@ -211,43 +215,44 @@ impl Solution {
     /*
     The next answer was translated from this python code below:
 
-
     class Solution:
         def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
-            m, n = len(nums1), len(nums2)
-            if m > n:
-                nums1, nums2, m, n = nums2, nums1, n, m
-            if n == 0:
+            len1, len2 = len(nums1), len(nums2)
+            if len1 > len2:
+                # nums1, nums2, len1, len2 = nums2, nums1, len2, len1
+                return self.findMedianSortedArrays(nums1=nums2, nums2=nums1)
+            if len2 == 0:
                 raise ValueError
-            imin, imax, half_len = 0, m, (m + n + 1) // 2
-            while imin <= imax:
-                i = (imin + imax) // 2
-                j = half_len - i
-                if i < m and nums2[j - 1] > nums1[i]:
-                    # i is too small, must increase it
-                    imin = i + 1
-                elif i > 0 and nums1[i - 1] > nums2[j]:
-                    # i is too big, must decrease it
-                    imax = i - 1
+
+            bs_min, bs_max, half_len = 0, len1, (len1 + len2 + 1) // 2
+            while bs_min <= bs_max:
+                mid1 = (bs_min + bs_max) // 2
+                mid2 = half_len - mid1
+                if mid1 < len1 and nums2[mid2 - 1] > nums1[mid1]:
+                    bs_min = mid1 + 1
+                elif mid1 > 0 and nums1[mid1 - 1] > nums2[mid2]:
+                    bs_max = mid1 - 1
                 else:
-                    # i is perfect
-                    if i == 0:
-                        max_of_left = nums2[j - 1]
-                    elif j == 0:
-                        max_of_left = nums1[i - 1]
+                    if mid1 == 0:
+                        max_of_left = nums2[mid2 - 1]
+                    elif mid2 == 0:
+                        max_of_left = nums1[mid1 - 1]
                     else:
-                        max_of_left = max(nums1[i - 1], nums2[j - 1])
-                    if (m + n) % 2 == 1:
+                        max_of_left = max(nums1[mid1 - 1], nums2[mid2 - 1])
+
+                    if (len1 + len2) % 2 == 1:
                         return max_of_left
-                    if i == m:
-                        min_of_right = nums2[j]
-                    elif j == n:
-                        min_of_right = nums1[i]
+
+                    if mid1 == len1:
+                        min_of_right = nums2[mid2]
+                    elif mid2 == len2:
+                        min_of_right = nums1[mid1]
                     else:
-                        min_of_right = min(nums1[i], nums2[j])
+                        min_of_right = min(nums1[mid1], nums2[mid2])
+
                     return (max_of_left + min_of_right) / 2.0
-            raise ValueError  # unreachable
-             */
+            raise ValueError
+    */
 
     #[allow(dead_code)]
     pub fn find_median_sorted_arrays_binary_search_copilot(
@@ -267,59 +272,45 @@ impl Solution {
         let mut bs_max = len1;
         let half_len = (len1 + len2 + 1) / 2;
         while bs_min <= bs_max {
-            let bs_mid1 = (bs_min + bs_max) / 2;
-            let bs_mid2 = half_len - bs_mid1;
-            if bs_mid1 < len1 && nums2[bs_mid2 - 1] > nums1[bs_mid1] {
-                // i is too small, increase it
-                bs_min = bs_mid1 + 1;
-            } else if bs_mid1 > 0 && nums1[bs_mid1 - 1] > nums2[bs_mid2] {
-                // i is too big, decrease it
-                bs_max = bs_mid1 - 1;
+            let mid1 = (bs_min + bs_max) / 2;
+            let mid2 = half_len - mid1;
+            if mid1 < len1 && nums2[mid2 - 1] > nums1[mid1] {
+                // mid1 is too small, increase it
+                bs_min = mid1 + 1;
+            } else if mid1 > 0 && nums1[mid1 - 1] > nums2[mid2] {
+                // mid1 is too big, decrease it
+                bs_max = mid1 - 1;
             } else {
-                // i is perfect
-                if bs_mid1 == 0 {
-                    let max_of_left = nums2[bs_mid2 - 1];
-                    if (len1 + len2) % 2 == 1 {
-                        return max_of_left as f64;
-                    }
-                    if bs_mid2 == len2 {
-                        let min_of_right = nums1[bs_mid1];
-                        return (max_of_left + min_of_right) as f64 / 2.0;
-                    } else {
-                        let min_of_right = nums2[bs_mid2];
-                        return (max_of_left + min_of_right) as f64 / 2.0;
-                    }
-                } else if bs_mid2 == 0 {
-                    let max_of_left = nums1[bs_mid1 - 1];
-                    if (len1 + len2) % 2 == 1 {
-                        return max_of_left as f64;
-                    }
-                    if bs_mid1 == len1 {
-                        let min_of_right = nums2[bs_mid2];
-                        return (max_of_left + min_of_right) as f64 / 2.0;
-                    } else {
-                        let min_of_right = nums1[bs_mid1];
-                        return (max_of_left + min_of_right) as f64 / 2.0;
-                    }
+                // mid1 is perfect
+                let max_of_left: i32;
+                if mid1 == 0 {
+                    max_of_left = nums2[mid2 - 1];
+                } else if mid2 == 0 {
+                    max_of_left = nums1[mid1 - 1];
                 } else {
-                    let max_of_left = std::cmp::max(nums1[bs_mid1 - 1], nums2[bs_mid2 - 1]);
-                    if (len1 + len2) % 2 == 1 {
-                        return max_of_left as f64;
-                    }
-                    if bs_mid1 == len1 {
-                        let min_of_right = nums2[bs_mid2];
-                        return (max_of_left + min_of_right) as f64 / 2.0;
-                    } else {
-                        let min_of_right = std::cmp::min(nums1[bs_mid1], nums2[bs_mid2]);
-                        return (max_of_left + min_of_right) as f64 / 2.0;
-                    }
+                    max_of_left = std::cmp::max(nums1[mid1 - 1], nums2[mid2 - 1]);
                 }
+
+                if (len1 + len2) % 2 == 1 {
+                    return max_of_left as f64;
+                }
+
+                let min_of_right: i32;
+                if mid1 == len1 {
+                    min_of_right = nums2[mid2];
+                } else if mid2 == len2 {
+                    min_of_right = nums1[mid1];
+                } else {
+                    min_of_right = std::cmp::min(nums1[mid1], nums2[mid2]);
+                }
+                return (max_of_left + min_of_right) as f64 / 2.0;
             }
         }
         panic!("unreachable");
     }
     pub fn find_median_sorted_arrays(nums1: Vec<i32>, nums2: Vec<i32>) -> f64 {
-        Solution::find_median_sorted_arrays_binary_search_copilot(nums1, nums2)
+        // Solution::find_median_sorted_arrays_binary_search_copilot(nums1, nums2)
+        Solution::find_median_sorted_arrays_binary_search_pablo(nums1, nums2)
         // Solution::find_median_sorted_arrays_copilot(nums1, nums2)
     }
 }
@@ -329,6 +320,10 @@ struct Solution;
 pub fn main() {
     assert_eq!(
         Solution::find_median_sorted_arrays(vec![1, 3], vec![2]),
+        2.0
+    );
+    assert_eq!(
+        Solution::find_median_sorted_arrays(vec![1], vec![2, 3]),
         2.0
     );
     assert_eq!(
@@ -351,6 +346,6 @@ pub fn main() {
     assert_eq!(Solution::find_median_sorted_arrays(vec![], vec![2, 3]), 2.5);
     assert_eq!(
         Solution::find_median_sorted_arrays(vec![3], vec![1, 2, 4]),
-        1.0
+        2.5
     ); // 2042
 }
