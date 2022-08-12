@@ -1,5 +1,7 @@
 use std::env;
 
+use regex::Regex;
+
 fn main() {
     let args: Vec<String> = env::args().collect();
     let default_filename = String::from("1");
@@ -11,14 +13,13 @@ fn main() {
             &default_filename
         }
     };
-    let new_filename = new_file_name_for_rust_module(filename);
+    let new_filename = leetcode_name_to_rust_module(filename);
     cli_clipboard::set_contents(new_filename.to_owned()).unwrap();
     println!("`{}' is copied to clipboard", new_filename);
 }
 
-fn new_file_name_for_rust_module(old_name: &str) -> String {
-    // TODO: check with regex if old_name is {number}.{word}-{word}-...
-
+#[allow(dead_code)]
+fn naive_leetcode_name_to_rust_module(old_name: &str) -> String {
     // check if old name is {number}.{word}-{word}-{...}.rs
     let mut split = old_name.split(".");
     // assert first part is number
@@ -55,4 +56,24 @@ fn new_file_name_for_rust_module(old_name: &str) -> String {
         name.split("-").collect::<Vec<&str>>().join("_")
     );
     new_name
+}
+
+fn leetcode_name_to_rust_module(leetcode_name: &str) -> String {
+    // check with regex if old_name is {number}.{word}-{word}-{...}.rs
+    // copilot knows how to do regex
+    // let re = Regex::new(r"^(\d+)\.([a-z]+(?:-[a-z]+)*)\.rs$").unwrap();
+    let test_re = Regex::new(r"^(\d+)\.([\w]+)(-[a-z]+)*(\.rs)?$").unwrap(); // my regex
+    assert!(test_re.is_match(leetcode_name));
+
+    let mut module_name: String = leetcode_name
+        .chars()
+        .map(|x| match x {
+            '.' | '-' => '_',
+            _ => x,
+        })
+        .collect();
+    if !module_name.ends_with(".rs") {
+        module_name.push_str(".rs");
+    }
+    format!("q{}", module_name)
 }
