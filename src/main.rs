@@ -3,6 +3,12 @@ use std::env;
 use regex::Regex;
 
 fn main() {
+    // TODO: update the behavior when args is empty:
+    //       0. We should expect user to run this after creating a new rust leetcode solution
+    //       1. Edit the file name to line up with the rust module name rule
+    //       2. Add the file name to lib.rs
+    //       3. Add the template of struct Solution and test to the new file
+
     let args: Vec<String> = env::args().collect();
     let default_filename = String::from("1");
 
