@@ -7,6 +7,19 @@
 // @lc code=start
 impl Solution {
     pub fn convert(s: String, num_rows: i32) -> String {
+        Solution::convert_forum(s, num_rows)
+    }
+    pub fn convert_forum(s: String, num_rows: i32) -> String {
+        let mut zigzags: Vec<_> = (0..num_rows)
+            .chain((1..num_rows - 1).rev())
+            .cycle()
+            .zip(s.chars())
+            .collect();
+        zigzags.sort_by_key(|&(row, _)| row);
+        zigzags.into_iter().map(|(_, c)| c).collect()
+    }
+    #[allow(dead_code)]
+    pub fn convert_copilot(s: String, num_rows: i32) -> String {
         if num_rows == 1 {
             return s;
         }

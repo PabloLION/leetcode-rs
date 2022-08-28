@@ -24,7 +24,7 @@ impl Solution {
     }
 
     #[allow(dead_code)]
-    pub fn longest_palindrome_github(s: String) -> String {
+    pub fn longest_palindrome_copilot(s: String) -> String {
         let mut longest_palindrome = String::new();
         let s_chars = s.chars().collect::<Vec<char>>();
         for center in 0..s_chars.len() {
