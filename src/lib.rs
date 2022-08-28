@@ -8,3 +8,4 @@ pub mod q2_add_two_numbers;
 pub mod q3_longest_substring_without_repeating_characters;
 pub mod q4_median_of_two_sorted_arrays;
 pub mod q5_longest_palindromic_substring;
+pub mod q6_zigzag_conversion;
