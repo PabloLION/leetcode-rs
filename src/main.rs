@@ -1,27 +1,82 @@
 use std::env;
+use std::io::Write;
+use std::path::Path;
 
 use regex::Regex;
-
+/// The main entry point of the program.
+/// ## Arguments
+/// * `path` (optional) - The path of the root of the rust repository.
+///
+/// ## Functionality
+/// Rename all file with leetcode default name to rust module name.
+/// Add the module name to lib.rs
+/// Add the template of struct Solution and test to the new file
 fn main() {
-    // TODO: update the behavior when args is empty:
-    //       0. We should expect user to run this after creating a new rust leetcode solution
-    //       1. Edit the file name to line up with the rust module name rule
-    //       2. Add the file name to lib.rs
-    //       3. Add the template of struct Solution and test to the new file
-
     let args: Vec<String> = env::args().collect();
-    let default_filename = String::from("1");
-
-    let filename: &String = match args.get(1) {
-        Some(filename) => filename,
-        None => {
-            println!("Using default filename: {}", default_filename);
-            &default_filename
-        }
+    let mut no_rename = true;
+    // parse args
+    let repo_path = if args.len() == 1 {
+        let script_path = Path::new(args.get(0).unwrap());
+        script_path
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .parent()
+            .unwrap()
+            .canonicalize()
+            .unwrap()
+    } else if args.len() == 2 {
+        Path::new(args.get(1).unwrap()).canonicalize().unwrap()
+    } else {
+        panic!("Invalid argument number. Expect 0 or 1 argument.");
     };
-    let new_filename = leetcode_name_to_rust_module(filename);
-    cli_clipboard::set_contents(new_filename.to_owned()).unwrap();
-    println!("`{}' is copied to clipboard", new_filename);
+    let src_path = repo_path.join("src");
+    println!("{}", src_path.to_str().unwrap());
+
+    let lib_path = src_path.join("lib.rs");
+    let lib_file = std::fs::OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open(&lib_path)
+        .unwrap();
+
+    // get all file names in src directory
+    for filename in src_path.read_dir().unwrap() {
+        let filename = filename.unwrap();
+        let file_name = filename.file_name().into_string().unwrap();
+        let rust_module_name = leetcode_name_to_rust_module_name(&file_name);
+        match rust_module_name {
+            Some(rust_module_name) => {
+                no_rename = false;
+                // Rename file name to meet rust module name rule
+                let new_script_path = src_path.join(String::from(&rust_module_name) + ".rs");
+                std::fs::rename(src_path.join(&file_name), &new_script_path).unwrap();
+                println!("renamed {} to {}", &file_name, &rust_module_name);
+                // 5.longest-palindromic-substring.rs
+                // Add the file name to lib.rs
+                write!(&lib_file, "pub mod {};\n", &rust_module_name).unwrap();
+                println!("added {} to lib.rs", &rust_module_name);
+
+                // Add the template of struct Solution and test to the new file
+                let new_script_file = std::fs::OpenOptions::new()
+                    .write(true)
+                    .append(true)
+                    .open(&new_script_path)
+                    .unwrap();
+                write!(
+                    &new_script_file,
+                    "struct Solution;\npub fn main() {{assert_eq!();}}\n"
+                )
+                .unwrap();
+            }
+            None => (),
+        };
+    }
+
+    if no_rename {
+        println!("No file needs to be renamed.");
+    }
 }
 
 #[allow(dead_code)]
@@ -64,22 +119,24 @@ fn naive_leetcode_name_to_rust_module(old_name: &str) -> String {
     new_name
 }
 
-fn leetcode_name_to_rust_module(leetcode_name: &str) -> String {
+fn leetcode_name_to_rust_module_name(leetcode_name: &str) -> Option<String> {
     // check with regex if old_name is {number}.{word}-{word}-{...}.rs
     // copilot knows how to do regex
     // let re = Regex::new(r"^(\d+)\.([a-z]+(?:-[a-z]+)*)\.rs$").unwrap();
-    let test_re = Regex::new(r"^(\d+)\.([\w]+)(-[a-z]+)*(\.rs)?$").unwrap(); // my regex
-    assert!(test_re.is_match(leetcode_name));
+    let test_re = Regex::new(r"^(\d+)\.([\w]+)(-[a-z]+)*(\.rs)?$").unwrap();
+    if !test_re.is_match(leetcode_name) {
+        return None;
+    }
 
-    let mut module_name: String = leetcode_name
+    let rust_module_name: String = leetcode_name
         .chars()
         .map(|x| match x {
             '.' | '-' => '_',
             _ => x,
         })
         .collect();
-    if !module_name.ends_with(".rs") {
-        module_name.push_str(".rs");
-    }
-    format!("q{}", module_name)
+    Some(format!(
+        "q{}",
+        rust_module_name[0..rust_module_name.len() - 3].to_owned()
+    ))
 }
