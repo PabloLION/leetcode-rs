@@ -17,7 +17,7 @@ fn main() {
     // parse args
     let repo_path = if args.len() == 1 {
         let script_path = Path::new(args.get(0).unwrap());
-        script_path
+        let repo_path = script_path
             .parent()
             .unwrap()
             .parent()
@@ -25,7 +25,9 @@ fn main() {
             .parent()
             .unwrap()
             .canonicalize()
-            .unwrap()
+            .unwrap();
+        // for cargo run arg0 is ./src/main, not ./target/debug/leetcode-rs
+        repo_path
     } else if args.len() == 2 {
         Path::new(args.get(1).unwrap()).canonicalize().unwrap()
     } else {
