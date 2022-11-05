@@ -11,3 +11,4 @@ pub mod q5_longest_palindromic_substring;
 pub mod q6_zigzag_conversion;
 pub mod q7_reverse_integer;
 pub mod q8_string_to_integer_atoi;
+pub mod q9_palindrome_number;
