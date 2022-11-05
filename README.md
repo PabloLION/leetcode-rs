@@ -18,3 +18,12 @@ my solution to leetcode with rust
 ## Thoughts on LeetCode
 
 1. Focusing too much on the executing speed and memory usage rather than the readability.
+
+## Miscellaneous
+
+### How to log-in the VSCE
+
+See GitHub:
+
+- Get header <https://github.com/LeetCode-OpenSource/vscode-leetcode/issues/478#issuecomment-560395305>
+- Get cookie <https://github.com/LeetCode-OpenSource/vscode-leetcode/issues/478#issuecomment-560114580>
