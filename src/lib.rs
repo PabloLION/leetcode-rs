@@ -1,6 +1,33 @@
 // helpers
 pub mod helper;
-pub use q2_add_two_numbers::ListNode;
+
+// List Node
+#[derive(PartialEq, Eq, Clone, Debug)]
+pub struct ListNode {
+    pub val: i32,
+    pub next: Option<Box<ListNode>>,
+}
+
+impl ListNode {
+    // #[inline]
+    pub fn new(val: i32) -> Self {
+        ListNode { next: None, val }
+    }
+
+    pub fn from_vec(vec: Vec<i32>) -> ListNode {
+        let mut result = ListNode::new(0);
+        let mut tail_ref = &mut result;
+        for i in vec {
+            let n = Box::new(ListNode::new(i));
+            tail_ref.next = Some(n);
+            tail_ref = tail_ref.next.as_mut().unwrap();
+        }
+        result
+    }
+    pub fn from(vec: Vec<i32>) -> ListNode {
+        ListNode::from_vec(vec)
+    }
+}
 
 // solutions
 pub mod q1_two_sum;
@@ -22,3 +49,6 @@ pub mod q16_3_sum_closest;
 pub mod q17_letter_combinations_of_a_phone_number;
 pub mod q18_4_sum;
 pub mod q19_remove_nth_node_from_end_of_list;
+pub mod q20_valid_parentheses;
+pub mod q21_merge_two_sorted_lists;
+pub mod q22_generate_parentheses;
