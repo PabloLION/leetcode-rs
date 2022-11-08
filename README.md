@@ -2,6 +2,10 @@
 
 my solution to leetcode with rust
 
+## Problem todo
+
+- q23 is slow.
+
 ## What does it give?
 
 - Solution to LeetCode problems.
@@ -14,6 +18,10 @@ my solution to leetcode with rust
 - I ([PabloLION](https://github.com/PabloLION)) try to refactor the solutions to be more readable.
 - Some `Solution` have a `fn XXX_pablo`, which is written by me myself. Sometimes there's also a `fn XXX_pablo_copilot`, which is suggested by GitHub Copilot.
 - See git blame for more details.
+
+## References
+
+For all linked lists / node lists / list node : <https://rust-unofficial.github.io/too-many-lists/>
 
 ## Thoughts on LeetCode
 

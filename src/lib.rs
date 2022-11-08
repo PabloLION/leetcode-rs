@@ -52,3 +52,7 @@ pub mod q19_remove_nth_node_from_end_of_list;
 pub mod q20_valid_parentheses;
 pub mod q21_merge_two_sorted_lists;
 pub mod q22_generate_parentheses;
+pub mod q23_merge_k_sorted_lists;
+pub mod q24_swap_nodes_in_pairs;
+pub mod q25_reverse_nodes_in_k_group;
+pub mod q26_remove_duplicates_from_sorted_array;
