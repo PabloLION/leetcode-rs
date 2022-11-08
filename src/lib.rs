@@ -28,6 +28,12 @@ impl ListNode {
         ListNode::from_vec(vec)
     }
 }
+// change vector in-place judge
+
+pub fn judge_vector(nums: &mut Vec<i32>, expected: Vec<i32>, func: fn(&mut Vec<i32>) -> i32) {
+    let len = func(nums);
+    assert_eq!(nums[..len as usize], expected);
+}
 
 // solutions
 pub mod q1_two_sum;

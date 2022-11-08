@@ -17,15 +17,19 @@ impl Solution {
 
         len as i32
     }
-    pub fn test(nums: &mut Vec<i32>, expected: Vec<i32>) {
-        let len = Solution::remove_duplicates(nums);
-        assert_eq!(nums[..len as usize], expected);
-    }
 }
 // @lc code=end
+pub fn judge_vector(nums: &mut Vec<i32>, expected: Vec<i32>, func: fn(&mut Vec<i32>) -> i32) {
+    let len = func(nums);
+    assert_eq!(nums[..len as usize], expected);
+}
 
 struct Solution;
 pub fn main() {
-    Solution::test(&mut vec![1, 1, 2], vec![1, 2]);
-    Solution::test(&mut vec![0, 0, 1, 1, 1, 2, 2, 3, 3, 4], vec![0, 1, 2, 3, 4]);
+    judge_vector(&mut vec![1, 1, 2], vec![1, 2], Solution::remove_duplicates);
+    judge_vector(
+        &mut vec![0, 0, 1, 1, 1, 2, 2, 3, 3, 4],
+        vec![0, 1, 2, 3, 4],
+        Solution::remove_duplicates,
+    );
 }
