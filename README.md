@@ -4,7 +4,8 @@ my solution to leetcode with rust
 
 ## End
 
-LeetCode doesn't support importing HashMap, HashSet, etc.. These are the necessary functionalities for hard problems.
+LeetCode doesn't support importing HashMap, HashSet, etc. These are the necessary functionalities for hard problems.
+So I stopped at problem 30.
 
 ## Problem todo
 
