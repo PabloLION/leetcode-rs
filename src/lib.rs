@@ -28,12 +28,6 @@ impl ListNode {
         ListNode::from_vec(vec)
     }
 }
-// change vector in-place judge
-
-pub fn judge_vector(nums: &mut Vec<i32>, expected: Vec<i32>, func: fn(&mut Vec<i32>) -> i32) {
-    let len = func(nums);
-    assert_eq!(nums[..len as usize], expected);
-}
 
 // solutions
 pub mod q1_two_sum;
@@ -62,3 +56,6 @@ pub mod q23_merge_k_sorted_lists;
 pub mod q24_swap_nodes_in_pairs;
 pub mod q25_reverse_nodes_in_k_group;
 pub mod q26_remove_duplicates_from_sorted_array;
+pub mod q27_remove_element;
+pub mod q29_divide_two_integers;
+pub mod q30_substring_with_concatenation_of_all_words;

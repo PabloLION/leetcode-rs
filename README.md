@@ -2,9 +2,23 @@
 
 my solution to leetcode with rust
 
+## End
+
+LeetCode doesn't support importing HashMap, HashSet, etc.. These are the necessary functionalities for hard problems.
+
 ## Problem todo
 
 - q23 is slow.
+- q28 API changed, so I didn't do it.
+- q30 is slow
+
+## Essence
+
+- if not specified, should get clear if every X appears at least / at most once.
+
+## Rust
+
+`String::match_indices` said `disjoint`
 
 ## What does it give?
 
